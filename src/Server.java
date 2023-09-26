@@ -25,19 +25,19 @@ public class Server implements Runnable {
 	public void run() {
 		// code that is executed when we run or start the runnable class
 
-		try {
-        server = new ServerSocket(6000);
-        pool = Executors.newCachedThreadPool();
-        while(!done){
-          // this server has the accept method which return a client socket
-          Socket client = server.accept();
-          // we don't want to deal with the client over here we want to open a new instance of the ConnectionHandler as we need to handle multiple client concurrently 
-          //all that handlers are going to run in a thread pool
-          ConnectionHandler handler = new ConnectionHandler(client);
-          connections.add(handler);
-          pool.execute(handler);
-        }
-        
+	try {
+	        server = new ServerSocket(6000);
+	        pool = Executors.newCachedThreadPool();
+	        while(!done){
+	          // this server has the accept method which return a client socket
+	          Socket client = server.accept();
+	          // we don't want to deal with the client over here we want to open a new instance of the ConnectionHandler as we need to handle multiple client concurrently 
+	          //all that handlers are going to run in a thread pool
+	          ConnectionHandler handler = new ConnectionHandler(client);
+	          connections.add(handler);
+	          pool.execute(handler);
+	        }
+	        
       } catch (IOException e) {
         e.printStackTrace();
         System.out.println("Server is shutting down! dut to an error");
@@ -48,8 +48,8 @@ public class Server implements Runnable {
 		
 	}
 	
-	// In order to broad cast the message to all the different clients connected:
-	public void broadCast(String message) {
+// In order to broad cast the message to all the different clients connected:
+public void broadCast(String message) {
 		for(ConnectionHandler cd: connections) {
       if(cd != null) {
         cd.sendMessage(message);
@@ -65,6 +65,7 @@ public class Server implements Runnable {
       }
     }
     done = true;
+    pool.shutdown();	  
     if(!server.isClosed()) {
       try {
         server.close(); 
