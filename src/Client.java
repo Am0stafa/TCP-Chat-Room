@@ -15,25 +15,25 @@ public class Client implements Runnable{
 
 	@Override
 	public void run() {
-		try {
+	try {
 		client = new Socket("localhost", 6000);
       		out = new PrintWriter(client.getOutputStream(), true);
       		in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 
-      InputHandler inHandler = new InputHandler();
-      Thread t = new Thread(inHandler);
-      t.start();
+	      InputHandler inHandler = new InputHandler();
+	      Thread t = new Thread(inHandler);
+	      t.start();
+	
+	      String inMessage;
+	      while((inMessage = in.readLine()) != null) {
+	        System.out.println(inMessage);
+	      }
 
-      String inMessage;
-      while((inMessage = in.readLine()) != null) {
-        System.out.println(inMessage);
-      }
-
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	} catch (UnknownHostException e) {
+		e.printStackTrace();
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
 		
 	}
 
@@ -59,7 +59,8 @@ public class Client implements Runnable{
         while(!done) {
           try {
             String message = inReader.readLine();
-            if(message.equals("quit")) {
+            if(message.equals("/quit")) {
+	      out.println("/quit")
               inReader.close();
               shutdown();
             } else {
